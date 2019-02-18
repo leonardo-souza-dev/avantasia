@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ConfigHelper.Controller;
+using ConfigHelper.Controllers;
 
 namespace ConfigHelper
 {
@@ -11,7 +11,7 @@ namespace ConfigHelper
     {
         static void Main(string[] args)
         {
-            new HomeController().MostraConexoesDeBanco();
+            new HomeController().TelaDeEscolhaDeSite();
 
             Console.ReadLine();
         }

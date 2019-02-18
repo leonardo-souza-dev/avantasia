@@ -1,63 +1,28 @@
-﻿using Microsoft.Web.Administration;
+﻿using ConfigHelper.Model;
+using Microsoft.Web.Administration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+//using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using ConfigHelper.Model;
-using ConfigHelper.View;
-using System.Configuration;
 
-namespace ConfigHelper.Controller
+namespace ConfigHelper.Base
 {
-    public class HomeController
+    public class ConfigService
     {
-        public void MostraConexoesDeBanco()
+        public List<LinhaDeConfigDeConnecionString> ObterLinhasDeConfigDeConnectionStringPublic(Site siteEscolhido)
         {
-            var iisManager = new ServerManager();
-
-            var indexSiteEscolhido = TelaDeEscolhaDeSiteView.Render(iisManager.Sites);
-
-            var siteEscolhido = iisManager.Sites[indexSiteEscolhido];
-
             var caminhoFisicoDaConnectionString = ObterCaminhoFisicoDaConnectionString(siteEscolhido);
 
             var linhas = ObterLinhasDeConfigDeConnectionString(caminhoFisicoDaConnectionString);
 
-            ExibirConexoesDeBancoView.Render(linhas);
-        }
-
-        private List<LinhaDeConfigDeConnecionString> ObterLinhasDeConfigDeConnectionString(string caminhoFisicoConnectionString)
-        {
-            XDocument doc = XDocument.Load(caminhoFisicoConnectionString);
-            string jsonText = JsonConvert.SerializeXNode(doc);
-
-            dynamic todoXML = JsonConvert.DeserializeObject<ExpandoObject>(jsonText);
-            List<LinhaDeConfigDeConnecionString> conns = new List<LinhaDeConfigDeConnecionString>();
-
-            foreach (var tagConnectionStringsPai in todoXML.connectionStrings.add)
-            {
-                var c = new LinhaDeConfigDeConnecionString();
-                foreach (KeyValuePair<string, object> prop in tagConnectionStringsPai)
-                {
-                    var key = prop.Key;
-                    var value = prop.Value;
-                    if (key == "@name")
-                        c.Name = value.ToString();
-                    else if (key == "@connectionString")
-                        c.ConnectionString = value.ToString();
-                    else if (key == "@providerName")
-                        c.ProviderName = value.ToString();
-                }
-
-                conns.Add(c);
-            }
-
-            return conns;
+            return linhas;
         }
 
         private string ObterCaminhoFisicoDaConnectionString(Site site)
@@ -91,6 +56,35 @@ namespace ConfigHelper.Controller
             }
 
             return caminhoFisicoConnectionString;
+        }
+
+        private List<LinhaDeConfigDeConnecionString> ObterLinhasDeConfigDeConnectionString(string caminhoFisicoConnectionString)
+        {
+            XDocument doc = XDocument.Load(caminhoFisicoConnectionString);
+            string jsonText = JsonConvert.SerializeXNode(doc);
+
+            dynamic todoXML = JsonConvert.DeserializeObject<ExpandoObject>(jsonText);
+            List<LinhaDeConfigDeConnecionString> conns = new List<LinhaDeConfigDeConnecionString>();
+
+            foreach (var tagConnectionStringsPai in todoXML.connectionStrings.add)
+            {
+                var c = new LinhaDeConfigDeConnecionString();
+                foreach (KeyValuePair<string, object> prop in tagConnectionStringsPai)
+                {
+                    var key = prop.Key;
+                    var value = prop.Value;
+                    if (key == "@name")
+                        c.Name = value.ToString();
+                    else if (key == "@connectionString")
+                        c.ConnectionString = value.ToString();
+                    else if (key == "@providerName")
+                        c.ProviderName = value.ToString();
+                }
+
+                conns.Add(c);
+            }
+
+            return conns;
         }
     }
 }

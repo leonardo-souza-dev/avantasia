@@ -51,12 +51,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\Conteudo.cs" />
-    <Compile Include="Controller\HomeController.cs" />
+    <Compile Include="Base\Tela.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Services\ConfigService.cs" />
+    <Compile Include="Services\IisService.cs" />
+    <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Model\ConnectionString.cs" />
     <Compile Include="Model\LinhaDeConfigDeConnecionString.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="View\ListaDeLinhasDeConfigDeConnectionString.pug" />
     <Compile Include="View\ListaConnView.cs" />
     <Compile Include="View\HomeView.cs" />
   </ItemGroup>
